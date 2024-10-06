@@ -25,7 +25,7 @@ def func():
                 with gr.Column():
                     clear_btn = gr.Button(value="清空")
                 with gr.Column():
-                    submit_btn = gr.Button("提交", variant="primary")
+                    submit_btn = gr.Button("生成", variant="primary")
         with gr.Column():
             output_text1 = gr.Textbox(label="密码")
             output_text2 = gr.Textbox(label="密码加密后的结果")
