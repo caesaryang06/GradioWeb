@@ -6,3 +6,10 @@ dist/
 #.vscode/
 # 忽略 .git 文件夹
 #.git/
+
+# 忽略文件
+gradio_main.spec
+
+
+# 忽略文件夹
+build/
