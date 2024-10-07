@@ -35,7 +35,7 @@ if __name__ == "__main__":
                 tab2_info.func()
             with gr.Tab("单个语音识别"):
                 tab3_info.func()
-            with gr.Tab("批量语音识别"):
+            with gr.Tab("批量视频识别"):
                 tab4_info.func()
 
     if sys.platform.startswith('win'):

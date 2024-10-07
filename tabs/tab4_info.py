@@ -72,7 +72,7 @@ def submit_result(op, audio_files):
 def func():
     with gr.Row():
         with gr.Column():
-            input_files = gr.Files(label="文件", type='filepath',
+            input_files = gr.Files(label="视频文件", type='filepath',
                                     file_count="directory", visible=True)
             op_radio = gr.Radio(["字幕文件生成", "音频文件生成"],
                                 label="操作类型", info="请选择操作类型:", value="字幕文件生成")
