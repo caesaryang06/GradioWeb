@@ -1,10 +1,19 @@
 import gradio as gr
 from tabs import tab1_info, tab2_info, tab3_info, tab4_info
 import sys
+from tools.common_log import setup_logger
+from tools import customer_common_funcs as ccf
 
 # 加载 .env 文件
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv())
+
+
+
+# 设置日志
+log_file = ccf.getCurrentDateStr() + ".log"
+logger = setup_logger(log_file)
+
 
 
 
