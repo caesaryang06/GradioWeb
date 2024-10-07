@@ -13,3 +13,4 @@ gradio_main.spec
 
 # 忽略文件夹
 build/
+out/

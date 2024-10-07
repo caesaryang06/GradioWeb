@@ -1,6 +1,7 @@
 import gradio as gr
-from tabs import tab1_info, tab2_info
+from tabs import tab1_info, tab2_info, tab3_info, tab4_info
 import sys
+
 # 加载 .env 文件
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv())
@@ -23,6 +24,10 @@ if __name__ == "__main__":
                 tab1_info.func()
             with gr.Tab("密码加解密"):
                 tab2_info.func()
+            with gr.Tab("单个语音识别"):
+                tab3_info.func()
+            with gr.Tab("批量语音识别"):
+                tab4_info.func()
 
     if sys.platform.startswith('win'):
         app.launch(inbrowser=True, auth=login, share=False)
