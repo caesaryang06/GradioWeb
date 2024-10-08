@@ -69,9 +69,22 @@ def export_to_excel(df):
     return tmp_path
 
 
-with gr.Blocks() as demo:
-    gr.Markdown("# 邮箱管理")
 
+    # 定义函数字典
+    dict_operations = {
+        "字幕文件生成": transcribe_audios,
+        "音频文件生成": movie2voice,
+    }
+    list_files = dict_operations[op](audio_files)
+
+    # 将结果列表中的所有文件压缩成一个zip文件
+    basedir = "out/sr2/tmp/" if op == "字幕文件生成" else "out/m2v/tmp/"
+    zip_name = basedir + ccf.getCurrentDateStr() + ".zip"
+    zip_all_files(list_files, zip_name)
+
+    return list_files,[zip_name]
+
+def func():
     with gr.Row():
         address_input = gr.Textbox(label="邮箱地址")
         password_input = gr.Textbox(label="邮箱密码")
@@ -115,7 +128,3 @@ with gr.Blocks() as demo:
         inputs=[address_input, password_input, search_input],
         outputs=output
     )
-
-    demo.load(show_table, outputs=output)
-
-demo.launch()
