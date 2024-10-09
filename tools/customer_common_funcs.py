@@ -7,9 +7,40 @@ import os
 import uuid
 import time
 import datetime
-
-
+import hashlib
 from pydub import AudioSegment
+import tempfile
+
+
+
+# 传入dataframe导出数据到Excel文件
+def export_to_excel(df):
+    '''
+    传入dataframe导出数据到Excel文件
+    '''
+
+    # 删除指定目录下文件名称小于当天的文件
+    delete_old_files('out/excel')
+
+
+    excelFile = 'out/excel/' + getCurrentDateTImeStr() + '.xlsx'
+    df.to_excel(excelFile, index=False)
+
+    return excelFile
+
+
+def delete_old_files(directory):
+    today = datetime.date.today()
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        if os.path.isfile(file_path):
+            # 从文件名中提取日期部分（假设文件名格式为 YYYYMMDD.extension）
+            file_date = datetime.date(int(filename[:4]), int(
+                filename[4:6]), int(filename[6:8]))
+            if file_date < today:
+                os.remove(file_path)
+                print(f"Deleted {file_path}")
+
 
 
 # 将 WAV 文件转换为 MP3 文件。
@@ -34,7 +65,17 @@ def convert_wav_to_mp3(audio_files, output_dir):
     return result
 
 
+# 获取唯一值
+def get_unique_value(s):
+    m = hashlib.sha256()
+    m.update(s.encode('utf-8'))
+    return m.hexdigest()
 
+
+
+# 获取key
+def getkey(key):
+    return key + '7890123456'
 
 
 # 返回指定路径下的所有文件名称
@@ -63,6 +104,14 @@ def getCurrentDateStr():
     """
     today = datetime.date.today()
     return str(today).replace("-", "")
+
+# 获取当前日期和时间，格式为"YYYYMMDDHHMMSS"
+def getCurrentDateTImeStr():
+    """
+    获取当前日期和时间，格式为"YYYYMMDDHHMMSS"
+    """
+    now = datetime.datetime.now()
+    return now.strftime('%Y%m%d%H%M%S')
 
 
 # 传入多个变量返回第一个不为None的值

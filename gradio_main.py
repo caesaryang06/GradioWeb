@@ -1,5 +1,5 @@
 import gradio as gr
-from tabs import tab1_info, tab2_info, tab3_info, tab4_info, tab5_info
+from tabs import tab1_info, tab2_info, tab3_info, tab4_info, tab5_info, tab6_info
 import sys
 from tools.common_log import setup_logger
 from tools import customer_common_funcs as ccf
@@ -38,7 +38,9 @@ if __name__ == "__main__":
             with gr.Tab("批量视频识别"):
                 tab4_info.func()
             with gr.Tab("邮箱管理"):
-                tab5_info.func()               
+                tab5_info.func()      
+            with gr.Tab("软件账号管理"):
+                tab6_info.func()
 
     if sys.platform.startswith('win'):
         app.launch(inbrowser=True, auth=login, share=False)

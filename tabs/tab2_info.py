@@ -1,8 +1,10 @@
 import gradio as gr
 from tools import custom_codec as cc
+from tools.encryption_tool import EncryptionUtils
+from tools import customer_common_funcs as ccf
 
 
-def submit_result(op, input):
+def submit_result(op, key, input):
     """
     自定义加解密
     输入: 操作类型,输入文本
@@ -11,14 +13,14 @@ def submit_result(op, input):
 
     # 定义函数字典
     dict = {
-        "加密": cc.encodePassword,
-        "解密": cc.decodePassword
+        "加密": EncryptionUtils.encrypt,
+        "解密": EncryptionUtils.decrypt
     }
 
     func_name = dict[op]
 
     if func_name:
-        return func_name(input)
+        return func_name(ccf.getkey(key), input)
     else:
         return "无效的操作类型"
 
@@ -32,6 +34,7 @@ def func():
         with gr.Column():
             op_radio = gr.Radio(["加密", "解密"],
                                 label="操作类型", info="请选择操作类型:", value="解密")
+            input_key = gr.Textbox(label="key")
             input_text = gr.Textbox(label="输入")
             with gr.Row():
                 with gr.Column():
@@ -46,4 +49,4 @@ def func():
                     input_text, output_text])
 
     # 设置提交点击事件
-    submit_btn.click(fn=submit_result, inputs=[op_radio, input_text], outputs=[output_text])
+    submit_btn.click(fn=submit_result, inputs=[op_radio, input_key,input_text], outputs=[output_text])
