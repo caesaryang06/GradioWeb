@@ -65,7 +65,7 @@ def submit_result(op, audio_files):
     # 将结果列表中的所有文件压缩成一个zip文件
     basedir = "out/sr2/tmp/" if op == "字幕文件生成" else "out/m2v/tmp/"
     zip_name = basedir + ccf.getCurrentDateStr() + ".zip"
-    zip_all_files(list_files, zip_name)
+    ccf.zip_all_files(list_files, zip_name)
 
     return list_files,[zip_name]
 

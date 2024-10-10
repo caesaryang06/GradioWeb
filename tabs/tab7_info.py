@@ -74,20 +74,20 @@ def process_media(operation, input_files, segment_length, output_format):
 
     if operation == "Split":
         listFiles = split_media(input_files, segment_length, output_format)
-       
+
     elif operation == "Merge":
         listFiles = merge_media(input_files, output_format)
-    
+
     # 将结果列表中的所有文件压缩成一个zip文件
     basedir = "out/media/tmp/"
     zip_name = basedir + ccf.getCurrentDateStr() + ".zip"
     ccf.zip_all_files(listFiles, zip_name)
-    
+
     return listFiles, zip_name
 
-with gr.Blocks() as demo:
-    gr.Markdown("# 音频/视频分割与合并")
 
+
+def func():
     with gr.Row():
         operation = gr.Radio(["Split", "Merge"], label="操作类型")
 
@@ -96,7 +96,7 @@ with gr.Blocks() as demo:
         segment_length = gr.Number(label="分割长度（秒）", value=60, visible=False)
         output_format = gr.Dropdown(choices=["mp3", "mp4"], label="输出格式")
 
-    submit_button = gr.Button("执行",variant="primary")
+    submit_button = gr.Button("执行", variant="primary")
 
     output = gr.File(label="输出文件明细", file_count="multiple")
     zip_output = gr.File(label="输出压缩文件")
@@ -118,5 +118,3 @@ with gr.Blocks() as demo:
         inputs=[operation, input_files, segment_length, output_format],
         outputs=[output, zip_output]
     )
-
-demo.launch()

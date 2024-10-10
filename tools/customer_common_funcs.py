@@ -10,7 +10,7 @@ import datetime
 import hashlib
 from pydub import AudioSegment
 import tempfile
-
+import zipfile
 
 
 # 传入dataframe导出数据到Excel文件
@@ -488,7 +488,16 @@ def string_processor_01(input_text):
     return list
 
 
-
+# 将多个文件压缩成一个zip文件
+def zip_all_files(files, zip_name):
+    '''
+    # 将多个文件压缩成一个zip文件
+    :param files: 文件列表
+    :param zip_name: 压缩文件名
+    '''
+    with zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for file in files:
+            zipf.write(file)
 
 
 

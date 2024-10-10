@@ -129,12 +129,20 @@ def submit_result(software_name, account, password, enable):
     """
     add_software(software_name, account, password, enable)
     df_software = get_accounts()
+
+
+    # 当前软件账号信息
     dataDF = df_software[df_software['software_name']
-                         == software_name]
+                         == software_name] 
+    resultDF = dataDF[['software_name', 'account', 'password', 'is_available']].rename(columns={'software_name': '软件名称','account': '账号', 'password': '密码', 'is_available': '是否可用'})
     
-    resultDF = dataDF[['software_name', 'account', 'password', 'is_available']].rename(columns={'software_name': '软件名称',
-                                                                                                'account': '账号', 'password': '密码', 'is_available': '是否可用'})
-    return "操作成功",resultDF,ccf.export_to_excel(resultDF) 
+    # 所有软件账号信息
+    allDF = df_software[['software_name', 'account', 'password', 'is_available']].rename(
+        columns={'software_name': '软件名称', 'account': '账号', 'password': '密码', 'is_available': '是否可用'})
+
+    
+    
+    return "操作成功",resultDF,ccf.export_to_excel(resultDF), ccf.export_to_excel(allDF)
 
 
 
@@ -157,7 +165,8 @@ def func():
         with gr.Column():
             output_text = gr.Textbox(label="输出框")
             output = gr.Dataframe(label="Table",headers=["软件名称","账号","密码","是否可用"])
-            download_file = gr.File(label="结果下载")
+            download_file = gr.File(label="当前结果下载")
+            all_download_file = gr.File(label="所有账号下载")
 
     # 设置下拉选项修改事件
     dropdown.change(fn=update_input, inputs=dropdown,
@@ -169,4 +178,4 @@ def func():
 
     # 设置提交点击事件
     submit_btn.click(fn=submit_result,
-                     inputs=[dropdown, input_text, input_passwd, enable_radio], outputs=[output_text, output,download_file],)
+                     inputs=[dropdown, input_text, input_passwd, enable_radio], outputs=[output_text, output, download_file, all_download_file],)
