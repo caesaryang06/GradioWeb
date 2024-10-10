@@ -6,7 +6,7 @@ def createTable():
     db = SqliteTool('data.db')
     db.delete_table('software_accounts')
     db.create_table('software_accounts',
-                    'uuid TEXT NOT NULL PRIMARY KEY,software_name TEXT NOT NULL,account TEXT NOT NULL,password TEXT NOT NULL,is_available TEXT NOT NULL')
+                    'uuid TEXT NOT NULL PRIMARY KEY,software_name TEXT NOT NULL,account TEXT NOT NULL,password TEXT NOT NULL,is_available TEXT NOT NULL,remark TEXT')
 
 
 
@@ -22,5 +22,5 @@ def insert():
 
 if __name__ == '__main__':
     createTable()
-    insert()
+    # insert()
 
