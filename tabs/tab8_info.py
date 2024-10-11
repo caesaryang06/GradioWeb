@@ -1,10 +1,44 @@
 import gradio as gr
 import pyshorteners
 import pyperclip
+import sqlite3
+import pandas as pd
+from tools import customer_common_funcs as ccf
+import re
 
 
 # 初始化 URL 缩短器
 shortener = pyshorteners.Shortener()
+
+
+# 获取长短链接
+def get_url_mappings():
+    # 连接到SQLite数据库
+    conn = sqlite3.connect('data.db')
+    # 读取表数据到DataFrame
+    urlMappingDF = pd.read_sql(
+        'SELECT uuid,short_url,long_url FROM url_mapping', conn)
+
+    return urlMappingDF
+
+
+# 保存长短链接
+def save_url_mapping(short_url, long_url):
+    urlMappingDF =get_url_mappings()
+
+    urlMappingDF.loc[len(urlMappingDF.index)] = [ccf.get_unique_value(short_url +
+                                                  long_url), short_url, long_url]
+    
+    #  按照 软件名称 和 邮箱名称 去重
+    urlMappingDF.drop_duplicates(subset=['short_url', 'long_url'],
+                       keep='first', inplace=True)
+
+    # 保存数据
+    # 连接到SQLite数据库
+    conn = sqlite3.connect('data.db')
+    urlMappingDF.to_sql('url_mapping', conn,
+                        if_exists='replace', index=False)
+
 
 
 def long_to_short(long_url):
@@ -25,7 +59,14 @@ def short_to_long(short_url):
 
 def submit_result(op_radio, input_link):
     if op_radio == "长链接 → 短链接":
-        return long_to_short(input_link)
+        short_link = long_to_short(input_link)
+
+        pattern = re.search(r'https?://[^\s;]+', short_link)
+        if pattern:
+            # 保存长短链接
+            save_url_mapping(short_link, input_link)
+           
+        return short_link
     elif op_radio == "短链接 → 长链接":
         return short_to_long(input_link)
 
@@ -33,7 +74,7 @@ def submit_result(op_radio, input_link):
 
 def copy_result(text):
     pyperclip.copy(text)
-    print("已复制到剪贴板")
+    print(f"已将【{text}】复制到剪贴板")
     
 
 

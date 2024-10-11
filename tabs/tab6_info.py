@@ -5,7 +5,7 @@ import os
 import random
 import sqlite3
 from tools import customer_common_funcs as ccf
-
+import re
 
 
 # 获取邮箱
@@ -30,6 +30,17 @@ def get_accounts():
         'SELECT uuid,software_name,account,password,is_available,remark FROM software_accounts', conn)
 
     return accountsDF
+
+
+# 获取长短链接
+def get_url_mappings():
+    # 连接到SQLite数据库
+    conn = sqlite3.connect('data.db')
+    # 读取表数据到DataFrame
+    urlMappingDF = pd.read_sql(
+        'SELECT uuid,short_url,long_url FROM url_mapping', conn)
+
+    return urlMappingDF
 
 
 def get_choice():
@@ -99,7 +110,7 @@ def add_software(software_name, account, password, enable, remark):
         df.loc[len(df.index)] = [ccf.get_unique_value(software_name + account), software_name, account, password, enable,remark]
     else:
         df.loc[(df['software_name'] == software_name) & (
-            df['account'] == account), 'is_available'] = enable
+            df['account'] == account), ['is_available','remark']] = [enable,remark]
 
     #  按照 软件名称 和 邮箱名称 去重
     df.drop_duplicates(subset=['software_name', 'account'],
@@ -115,8 +126,22 @@ def add_software(software_name, account, password, enable, remark):
 def update_input(selected_option):
     # 根据选择的下拉选项更新输入框内容
     valid_email, valid_email_password, remark = get_email(selected_option)
+
+    # 从备注中提取短链接
+    short_url = ""
+    pattern = re.search(r'https?://[^\s;]+', remark)
+    if pattern:
+        short_url = pattern.group()
+        print(f"从备注中提取到的短链接为: {short_url}")
+
     
-    return gr.Textbox(value=valid_email, interactive=True), gr.Textbox(value=valid_email_password, interactive=True), gr.Textbox(value=remark, interactive=True)
+    df_urlall = get_url_mappings()
+    urls = df_urlall[df_urlall['short_url']
+                                   == short_url]['long_url'].tolist()
+    
+    long_url = urls[0] if urls else short_url
+    
+    return gr.Textbox(value=valid_email, interactive=True), gr.Textbox(value=valid_email_password, interactive=True), gr.Textbox(value=remark, interactive=True),gr.Button(link=long_url)
 
 
 def refresh_result():
@@ -180,12 +205,12 @@ def func():
         input_passwd = gr.Textbox(label="邮箱密码", interactive=True)
 
         enable_radio = gr.Radio(["可用", "不可用"],
-                                label="是否可用  【查询会应用该选项】", info="请选择是否可用:", value="可用")
+                                label="选择是否可用  【查询会应用该选项】", value="可用")
  
         input_remark = gr.Textbox(label="备注", interactive=True)
 
     with gr.Row():
-        #link_btn = gr.Button("打开软件网址", variant="primary", disabled=True, link="https://www.baidu.com")
+        link_btn = gr.Button("打开软件网址", variant="primary",link="")
         update_btn = gr.Button("更新记录", variant="primary")
         search_btn = gr.Button("查询记录", variant="primary")
         all_btn = gr.Button("全部记录", variant="primary")
@@ -196,7 +221,7 @@ def func():
 
     # 设置下拉选项修改事件
     dropdown.change(fn=update_input, inputs=dropdown,
-                    outputs=[input_text, input_passwd, input_remark])
+                    outputs=[input_text, input_passwd, input_remark, link_btn])
     
     # 刷新按钮点击事件
     refresh_btn.click(fn=refresh_result, inputs=[],outputs=[dropdown])
