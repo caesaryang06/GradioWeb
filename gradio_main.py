@@ -1,5 +1,5 @@
 import gradio as gr
-from tabs import tab1_info, tab2_info, tab3_info, tab4_info, tab5_info, tab6_info,tab7_info
+from tabs import tab1_info, tab2_info, tab3_info, tab4_info, tab5_info, tab6_info,tab7_info, tab8_info
 import sys
 from tools.common_log import setup_logger
 from tools import customer_common_funcs as ccf
@@ -43,6 +43,8 @@ if __name__ == "__main__":
                 tab6_info.func()
             with gr.Tab("音频/视频分割"):
                 tab7_info.func()
+            with gr.Tab("长短链接转换"):
+                tab8_info.func()
 
     if sys.platform.startswith('win'):
         app.launch(inbrowser=True, auth=login, share=False)

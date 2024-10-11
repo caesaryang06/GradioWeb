@@ -180,11 +180,12 @@ def func():
         input_passwd = gr.Textbox(label="邮箱密码", interactive=True)
 
         enable_radio = gr.Radio(["可用", "不可用"],
-                                label="是否可用", info="请选择是否可用:", value="可用")
+                                label="是否可用  【查询会应用该选项】", info="请选择是否可用:", value="可用")
  
         input_remark = gr.Textbox(label="备注", interactive=True)
 
     with gr.Row():
+        #link_btn = gr.Button("打开软件网址", variant="primary", disabled=True, link="https://www.baidu.com")
         update_btn = gr.Button("更新记录", variant="primary")
         search_btn = gr.Button("查询记录", variant="primary")
         all_btn = gr.Button("全部记录", variant="primary")
