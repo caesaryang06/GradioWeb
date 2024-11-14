@@ -3,13 +3,13 @@ import sys
 # 该Python文件用加解密
 
 
-def encrypt4file(file_path, key):
+def encrypt4file():
     # 加密文件
     EncryptionUtils.encrypt_file('data.db', 'encrypted.db')
 
 
 
-def decrypt4file(file_path, key):
+def decrypt4file():
     # 解密文件
     EncryptionUtils.decrypt_file('encrypted.db', 'data.db')
 

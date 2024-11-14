@@ -8,3 +8,8 @@ git init
 git remote add github https://github.com/caesaryang06/pydemo.git
 :: 添加gitee远程仓库到本地
 git remote add gitee https://gitee.com/caesaryang06/pydemo.git
+
+
+git remote add github https://github.com/caesaryang06/GradioWebShow.git
+
+git remote add gitee https://gitee.com/caesaryang/gradio-web-show.git
