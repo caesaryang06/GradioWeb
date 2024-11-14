@@ -1,8 +1,8 @@
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 import base64
-
-
+from cryptography.fernet import Fernet
+import os
 
 class EncryptionUtils:
     @staticmethod
@@ -38,3 +38,43 @@ class EncryptionUtils:
         cipher = AES.new(key, AES.MODE_CBC, iv)
         plaintext = unpad(cipher.decrypt(ciphertext), AES.block_size)
         return plaintext.decode('utf - 8')
+
+    @staticmethod
+    def encrypt_file(input_file, output_file):
+        """
+        加密文件
+
+        :param key: 加密密钥，字符串类型
+        :param input_file: 输入文件路径，字符串类型
+        :param output_file: 输出文件路径，字符串类型
+        """
+        key = os.environ.get('DB_ENCRYPTION_KEY')
+        if not key:
+            raise ValueError(
+                "[DB_ENCRYPTION_KEY] not found in environment variables.")
+        fernet = Fernet(key)
+        with open(input_file, 'rb') as f:
+            data = f.read()
+        encrypted_data = fernet.encrypt(data)
+        with open(output_file, 'wb') as f:
+            f.write(encrypted_data)
+
+    @staticmethod
+    def decrypt_file(input_file, output_file):
+        """
+        解密文件
+
+        :param key: 解密密钥，字符串类型
+        :param input_file: 输入文件路径，字符串类型
+        :param output_file: 输出文件路径，字符串类型
+        """
+        key = os.environ.get('DB_ENCRYPTION_KEY')
+        if not key:
+            raise ValueError(
+                "[DB_ENCRYPTION_KEY] not found in environment variables.")
+        fernet = Fernet(key)
+        with open(input_file, 'rb') as f:
+            encrypted_data = f.read()
+        decrypted_data = fernet.decrypt(encrypted_data)
+        with open(output_file, 'wb') as f:
+            f.write(decrypted_data)

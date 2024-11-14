@@ -94,7 +94,7 @@ def func():
     with gr.Row():
         input_files = gr.File(label="输入文件", file_count="multiple")
         segment_length = gr.Number(label="分割长度（秒）", value=60, visible=False)
-        output_format = gr.Dropdown(choices=["mp3", "mp4"], label="输出格式")
+        output_format = gr.Dropdown(choices=["mp3", "mp4", "wav"], label="输出格式")
 
     submit_button = gr.Button("执行", variant="primary")
 

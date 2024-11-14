@@ -9,16 +9,17 @@ dist/
 
 # 忽略文件
 gradio_main.spec
-
+data.db
+demo.py
 
 # 忽略文件夹
 build/
 out/
-
+app/
+gradle/
 
 # 忽略以 .log 结尾的文件
 *.log
-*.db
 *.mp4
 *.mp3
 *.wav
@@ -31,4 +32,4 @@ out/
 *.mkv
 *.avi
 *.mov
-
+*.pyc
